@@ -2,10 +2,11 @@
 
 **Contents:**
 
-* [A graph](ryu.svg) that shows which moves can be comboed into which moves.
+* [A graph](ryu.svg) with which was attempted to show which moves can be comboed into which moves.
   The data is based on the combo trials.
   There are potentially more connections.
   A Google spreadsheet with the data can be found [here](https://docs.google.com/spreadsheets/d/1DFSMj221zP8sIRzEX7HiMsM7dGdJweVsqILZt6hfyjs/edit?usp=sharing).
+  This graph includes connections after "Cancel Drive Rush" which seem not possible.
 
 ## Learning
 
