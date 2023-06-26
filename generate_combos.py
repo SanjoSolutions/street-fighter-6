@@ -1,5 +1,6 @@
 import os
 import os.path
+import re
 from functions import deduplicate
 
 characters = next(os.walk('characters'))[1]
@@ -19,7 +20,7 @@ for character in characters:
 
             entries = [line.split(',') for line in lines]
             moves = dict(
-                (entry[0], {'drive gauge': float(entry[1]), 'super art gauge': int(entry[2])})
+                (entry[0], {'drive gauge': float(entry[1] or 0), 'super art gauge': int(entry[2] or 0), 'is normal': entry[3] == 'TRUE', 'damage': int(entry[4])})
                 for entry in entries)
 
 
@@ -29,7 +30,10 @@ for character in characters:
 
 
         def can_continue_combo_with_move(combo, move: str):
-            return (continuation_move == 'Sonic Break' and can_continue_with_sonic_break(combo) or continuation_move != 'Sonic Break') and has_enough_resources_for_move(move, combo) and (not move.startswith('(After drive rush) ') or combo[-1] in {'Parry Drive Rush', 'Cancel Drive Rush'})
+            return (continuation_move == 'Sonic Break' and can_continue_with_sonic_break(combo) or continuation_move != 'Sonic Break') \
+                and has_enough_resources_for_move(move, combo) \
+                and (not move.startswith('(After drive rush) ') or combo[-1] in {'Parry Drive Rush', 'Cancel Drive Rush'}) \
+                and not (len(combo) >= 2 and combo[-2] == 'Sonic Boom' and combo[-1] == 'Burning Straight')
 
 
         def has_enough_resources_for_move(move, combo):
@@ -51,14 +55,14 @@ for character in characters:
 
         def determine_move_drive_gauge_usage(move):
             if move in moves:
-                return moves[move]['drive gauge']
+                return retrieve_move(move)['drive gauge']
             else:
                 return 0
 
 
         def determine_move_super_art_usage(move):
             if move in moves:
-                return moves[move]['super art gauge']
+                return retrieve_move(move)['super art gauge']
             else:
                 return 0
 
@@ -67,18 +71,38 @@ for character in characters:
             multiplier = 1
             damage = 0
             previous_move = None
+            i = 1
             for move in combo:
-                if is_normal_move(move) and previous_move is not None:
-                    multiplier -= 0.1
+                if i >= 3 and previous_move in {'Parry Drive Rush', 'Cancel Drive Rush'} and not ('Parry Drive Rush' in combo[1:] or 'Cancel Drive Rush' in combo[1:]):
+                    multiplier = max(multiplier - 0.15, 0.1)
+                elif i >= 2 and is_normal_move(move) and multiplier > 0.1:
+                    multiplier = max(multiplier - 0.1, 0.1)
 
-                damage = multiplier * move['damage']
+                move_multiplier = max(multiplier, 0.5) if is_super_art(move) else multiplier
+                damage += move_multiplier * retrieve_move(move)['damage']
 
                 previous_move = move
+                i += 1
             return damage
 
 
         def is_normal_move(move):
-            return moves[move]['is normal']
+            return retrieve_move(move)['is normal']
+
+
+        def retrieve_move(move):
+            if move in moves:
+                return moves[move]
+            else:
+                match = re.match('^(?:\\(After drive rush\\) )?(?:(?:Light|Medium|Heavy) )?(.+?)(?: \\((?:Punish Counter|Counter|Block|Perfect)\\))?$', move)
+                if match:
+                    alternative_move_name = match.group(1)
+                    if alternative_move_name in moves:
+                        return moves[alternative_move_name]
+            return None
+
+        def is_super_art(move):
+            return move in moves and retrieve_move(move)['super art gauge'] > 0
 
 
         with open(character_directory + '/connecting_moves.csv',
@@ -98,7 +122,7 @@ for character in characters:
                 from_to[from_].add(to)
 
             combos = []
-            new_combos = []
+            combos_to_further_extend_after = []
 
             starting_moves = [move for move in from_to.keys() if move != 'Sonic Break' and not move.startswith('(After drive rush) ')]
             for starting_move in starting_moves:
@@ -107,17 +131,15 @@ for character in characters:
                     if can_continue_combo_with_move((starting_move,), continuation_move):
                         combo = (starting_move, continuation_move)
                         combos.append(combo)
-                        new_combos.append(combo)
+                        combos_to_further_extend_after.append(combo)
 
-            combos_to_continue = new_combos
+            combos_to_extend = combos_to_further_extend_after
 
-            while len(combos_to_continue) >= 1:
-                new_combos = []
-                for combo in combos_to_continue:
-                    has_used_maximum_drive_gauge = determine_drive_gauge_usage(
-                        combo) >= 6
-                    has_used_maximum_super_art_gauge = determine_super_art_gauge_usage(
-                        combo) == 3
+            while len(combos_to_extend) >= 1:
+                combos_to_further_extend_after = []
+                for combo in combos_to_extend:
+                    has_used_maximum_drive_gauge = determine_drive_gauge_usage(combo) >= 6
+                    has_used_maximum_super_art_gauge = determine_super_art_gauge_usage(combo) == 3
                     if not has_used_maximum_drive_gauge or not has_used_maximum_super_art_gauge:
                         last_move = combo[-1]
                         if last_move in from_to:
@@ -126,10 +148,14 @@ for character in characters:
                                 if can_continue_combo_with_move(combo, continuation_move):
                                     new_combo = combo + (continuation_move,)
                                     combos.append(new_combo)
-                                    new_combos.append(new_combo)
-                combos_to_continue = new_combos
+                                    if calculate_damage(combo) < 11000:
+                                        combos_to_further_extend_after.append(new_combo)
+                combos_to_extend = combos_to_further_extend_after
 
-            content = '\n'.join(' > '.join(combo) for combo in combos)
+            combos_with_metadata = [{'combo': combo, 'damage': calculate_damage(combo)} for combo in combos]
+            combos_with_metadata.sort(key = lambda combo_with_metadata: combo_with_metadata['damage'], reverse = True)
+
+            content = '\n'.join(' > '.join(combo_with_metadata['combo']) + ' (~' + str(combo_with_metadata['damage']) + ' damage)' for combo_with_metadata in combos_with_metadata)
 
             with open(character_directory + '/combos.txt', mode='w',
                       encoding='utf-8') as output_file:

@@ -1,12 +1,52 @@
-Name,Drive Gauge,Super Art Gauge
-Sonic Boom,2,0
-Somersault Kick,2,0
-Sonic Blade,2,0
-Sonic Cross,2,0
-Sonic Hurricane,0,1
-Solid Puncher,0,2
-Crossfire Somersault,0,3
-Drive Impact,1,0
-Drive Reversal,2,0
-Parry Drive Rush,0.5,0
-Cancel Drive Rush,3,0
+Name,Drive gauge,Super art gauge,Is normal,Damage
+Sonic Boom,0,0,,600
+Heavy Sonic Boom,0,0,,550
+Light Somersault Kick,0,0,,1200
+Medium Somersault Kick,0,0,,1300
+Heavy Somersault Kick,0,0,,1400
+Somersault Kick,0,0,,1400
+Sonic Blade,0,0,,400
+Heavy Sonic Blade,0,0,,500
+Sonic Cross,0,0,,1200
+OD Sonic Boom,2,0,,1000
+OD Somersault Kick,2,0,,1600
+OD Sonic Blade,2,0,,300
+OD Sonic Cross with OD Sonic Blade,4,0,,1700
+OD Sonic Cross with Sonic Blade,2,0,,1300
+Sonic Hurricane,0,1,,2000
+Heavy Sonic Hurricane,0,1,,1800
+Solid Puncher,0,2,,0
+Crossfire Somersault,0,3,,4000
+Drive Impact,1,0,,800
+Drive Reversal,2,0,,500
+Parry Drive Rush,0.5,0,,0
+Cancel Drive Rush,3,0,,0
+Full Bullet Magnum,,,TRUE,800
+Burning Straight,,,TRUE,800
+Spinning Back Knuckle,,,TRUE,800
+Knee Bazooka,,,TRUE,500
+Rolling Sobat,,,TRUE,700
+Reverse Spin Kick,,,TRUE,1000
+Guile High Kick,,,TRUE,1000
+Recoil Cannon,,,TRUE,1200
+Double Shot,,,TRUE,960
+Drake Fang,,,TRUE,1140
+Phantom Cutter,,,TRUE,600
+Dragon Suplex,,,,1200
+Judo Throw,,,,1200
+Flying Mare,,,,1200
+Flying Buster Drop,,,,1200
+Jumping Heavy Kick,,,TRUE,800
+Standing Medium Punch,,,TRUE,600
+Standing Light Punch,,,TRUE,300
+Standing Heavy Punch,,,TRUE,900
+Crouching Light Punch,,,TRUE,300
+Standing Light Kick,,,TRUE,300
+Standing Medium Kick,,,TRUE,700
+Standing Heavy Kick,,,TRUE,800
+Crouching Medium Punch,,,TRUE,600
+Crouching Heavy Punch,,,TRUE,900
+Crouching Light Kick,,,TRUE,200
+Crouching Medium Kick,,,TRUE,500
+Crouching Heavy Kick,,,TRUE,900
+Sonic Break,,,,600
