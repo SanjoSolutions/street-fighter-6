@@ -20,11 +20,13 @@ for character in characters:
                 for entry in entries
             ]
 
-            moves_on_counter = [{**move, 'name': move['name'] + ' (Counter)', 'advantage on hit': move['advantage on hit'] + 2 if move['advantage on hit'] else None} for move in regular_moves]
+            first_regular_moves = [move for move in regular_moves if move['is normal'] and move['advantage on hit'] < 18]
 
-            moves_on_punish_counter = [{**move, 'name': move['name'] + ' (Counter)', 'advantage on hit': move['advantage on hit'] + 4 if move['advantage on hit'] else None} for move in regular_moves]
+            first_moves_on_counter = [{**move, 'name': move['name'] + ' (Counter)', 'advantage on hit': move['advantage on hit'] + 2 if move['advantage on hit'] else None} for move in first_regular_moves]
 
-            first_moves = regular_moves + moves_on_counter + moves_on_punish_counter
+            first_moves_on_punish_counter = [{**move, 'name': move['name'] + ' (Punish Counter)', 'advantage on hit': move['advantage on hit'] + 4 if move['advantage on hit'] else None} for move in first_regular_moves]
+
+            first_moves = first_regular_moves + first_moves_on_counter + first_moves_on_punish_counter
 
             connecting_moves = []
 
