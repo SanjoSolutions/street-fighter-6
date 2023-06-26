@@ -2,7 +2,8 @@ def deduplicate(entries):
     dictionary = dict()
     result_entries = list()
     for entry in entries:
-        [from_, to] = entry
+        from_ = entry[0]
+        to = entry[1]
         if from_ not in dictionary or to not in dictionary[from_]:
             result_entries.append(entry)
             if from_ not in dictionary:

@@ -124,7 +124,8 @@ for character in characters:
 
             from_to = dict()
             for entry in entries:
-                [from_, to] = entry
+                from_ = entry[0]
+                to = entry[1]
                 if from_ not in from_to:
                     from_to[from_] = set()
                 from_to[from_].add(to)
