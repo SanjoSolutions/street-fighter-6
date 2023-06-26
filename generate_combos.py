@@ -28,8 +28,8 @@ for character in characters:
                 'Sonic Break', 'Sonic Break', 'Sonic Break', 'Sonic Break')
 
 
-        def can_continue_combo_with_move(combo, move):
-            return (continuation_move == 'Sonic Break' and can_continue_with_sonic_break(combo) or continuation_move != 'Sonic Break') and has_enough_resources_for_move(move, combo)
+        def can_continue_combo_with_move(combo, move: str):
+            return (continuation_move == 'Sonic Break' and can_continue_with_sonic_break(combo) or continuation_move != 'Sonic Break') and has_enough_resources_for_move(move, combo) and (not move.startswith('(After drive rush) ') or combo[-1] in {'Parry Drive Rush', 'Cancel Drive Rush'})
 
 
         def has_enough_resources_for_move(move, combo):
@@ -63,6 +63,24 @@ for character in characters:
                 return 0
 
 
+        def calculate_damage(combo):
+            multiplier = 1
+            damage = 0
+            previous_move = None
+            for move in combo:
+                if is_normal_move(move) and previous_move is not None:
+                    multiplier -= 0.1
+
+                damage = multiplier * move['damage']
+
+                previous_move = move
+            return damage
+
+
+        def is_normal_move(move):
+            return moves[move]['is normal']
+
+
         with open(character_directory + '/connecting_moves.csv',
                   encoding='utf-8') as file:
             content = file.read()
@@ -82,13 +100,14 @@ for character in characters:
             combos = []
             new_combos = []
 
-            starting_moves = from_to.keys()
+            starting_moves = [move for move in from_to.keys() if move != 'Sonic Break' and not move.startswith('(After drive rush) ')]
             for starting_move in starting_moves:
                 continuation_moves = from_to[starting_move]
                 for continuation_move in continuation_moves:
-                    combo = (starting_move, continuation_move)
-                    combos.append(combo)
-                    new_combos.append(combo)
+                    if can_continue_combo_with_move((starting_move,), continuation_move):
+                        combo = (starting_move, continuation_move)
+                        combos.append(combo)
+                        new_combos.append(combo)
 
             combos_to_continue = new_combos
 
@@ -104,8 +123,7 @@ for character in characters:
                         if last_move in from_to:
                             continuation_moves = from_to[last_move]
                             for continuation_move in continuation_moves:
-                                if can_continue_combo_with_move(combo,
-                                                                continuation_move):
+                                if can_continue_combo_with_move(combo, continuation_move):
                                     new_combo = combo + (continuation_move,)
                                     combos.append(new_combo)
                                     new_combos.append(new_combo)
