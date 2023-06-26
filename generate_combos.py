@@ -83,7 +83,7 @@ for character in characters:
             for move in combo:
                 if i >= 3 and previous_move in {'Parry Drive Rush', 'Cancel Drive Rush'} and not ('Parry Drive Rush' in combo[1:] or 'Cancel Drive Rush' in combo[1:]):
                     multiplier = max(multiplier - 0.15, 0.1)
-                elif i >= 2 and is_normal_move(move) and multiplier > 0.1:
+                elif i >= 3 and is_normal_move(move) and multiplier > 0.1:
                     multiplier = max(multiplier - 0.1, 0.1)
 
                 move_multiplier = max(multiplier, 0.5) if is_super_art(move) else multiplier
