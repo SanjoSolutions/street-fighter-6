@@ -30,10 +30,18 @@ for character in characters:
 
 
         def can_continue_combo_with_move(combo, move: str):
-            return (continuation_move == 'Sonic Break' and can_continue_with_sonic_break(combo) or continuation_move != 'Sonic Break') \
+            can_do = (continuation_move == 'Sonic Break' and can_continue_with_sonic_break(combo) or continuation_move != 'Sonic Break') \
                 and has_enough_resources_for_move(move, combo) \
                 and (not move.startswith('(After drive rush) ') or combo[-1] in {'Parry Drive Rush', 'Cancel Drive Rush'}) \
-                and not (len(combo) >= 2 and combo[-2] == 'Sonic Boom' and combo[-1] == 'Burning Straight')
+                and not (move == 'Burning Straight' and len(combo) >= 2 and combo[-2] == 'Burning Straight' and combo[-1] == 'Sonic Boom')
+
+            if can_do:
+                if move in {'Sonic Hurricane', 'Heavy Sonic Hurricane'} and len(combo) >= 1 and combo[-1] == 'Heavy Somersault Kick':
+                    return len(combo) >= 2 and combo[-2] == 'Phantom Cutter'  # See combo trial Intermediate 10
+                else:
+                    return True
+            else:
+                return False
 
 
         def has_enough_resources_for_move(move, combo):
