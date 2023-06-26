@@ -155,7 +155,7 @@ for character in characters:
             combos_with_metadata = [{'combo': combo, 'damage': calculate_damage(combo)} for combo in combos]
             combos_with_metadata.sort(key = lambda combo_with_metadata: combo_with_metadata['damage'], reverse = True)
 
-            content = '\n'.join(' > '.join(combo_with_metadata['combo']) + ' (~' + str(combo_with_metadata['damage']) + ' damage)' for combo_with_metadata in combos_with_metadata)
+            content = '\n'.join(' > '.join(combo_with_metadata['combo']) + ' (~' + str(combo_with_metadata['damage']) + ' damage, ' + str(determine_super_art_gauge_usage(combo_with_metadata['combo'])) + ' super art gauge, ' + str(determine_drive_gauge_usage(combo_with_metadata['combo'])) + ' drive gauge)' for combo_with_metadata in combos_with_metadata)
 
             with open(character_directory + '/combos.txt', mode='w',
                       encoding='utf-8') as output_file:
