@@ -17,3 +17,16 @@ that potentially leads to an HP lead, makes sense.
 ### Guile
 
 [https://docs.google.com/spreadsheets/d/1_s_O958bg_4ZyOOxq_fX-KgQg44fp5B21ltQdZ4t2TQ/edit?usp=sharing]()
+
+### Ryu
+
+https://docs.google.com/spreadsheets/d/1DFSMj221zP8sIRzEX7HiMsM7dGdJweVsqILZt6hfyjs/edit?usp=sharing
+
+## Combo research
+
+### Generating the graph
+
+```sh
+cd <directory of this repository>
+python generate_graph.py
+```
