@@ -11,3 +11,9 @@ When ones character has less HP than the character of the other player, then
 it makes more sense to do actions which are only safe to some degree because
 on time over one loses the round with the current HPs, so trying something
 that potentially leads to an HP lead, makes sense.
+
+## Characters
+
+### Guile
+
+[https://docs.google.com/spreadsheets/d/1_s_O958bg_4ZyOOxq_fX-KgQg44fp5B21ltQdZ4t2TQ/edit?usp=sharing]()
