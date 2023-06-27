@@ -30,3 +30,23 @@ https://docs.google.com/spreadsheets/d/1DFSMj221zP8sIRzEX7HiMsM7dGdJweVsqILZt6hf
 cd <directory of this repository>
 python generate_graph.py
 ```
+
+The output files are in the directory of the character.
+
+### Generating combos
+
+```sh
+cd <directory of this repository>
+python generate_combos.py
+```
+
+The output files are in the directory of the character.
+
+### Generating connecting moves
+
+```sh
+cd <directory of this repository>
+python generate_connecting_moves.py
+```
+
+The output files are in the directory of the character.
