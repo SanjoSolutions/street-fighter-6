@@ -1,5 +1,7 @@
 # Street Fighter 6
 
+Combo research and strategy.
+
 ## Strategy
 
 ### HP dynamic
