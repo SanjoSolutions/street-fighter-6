@@ -1,6 +1,7 @@
 import os
 import os.path
 import re
+from itertools import chain
 from functions import deduplicate
 
 characters = next(os.walk('characters'))[1]
@@ -75,16 +76,44 @@ for character in characters:
                 return 0
 
 
+        combo_multipliers_guile = {
+            ('Jumping Heavy Kick', 'Crouching Medium Punch', 'Double Shot Punch 2'): (1, 1, 0.7),
+            ('Jumping Heavy Kick', 'Standing Medium Punch', 'Crouching Medium Punch', 'Double Shot Punch 2'): (1, 1, 0.8, 0.6)
+        }
+
+        move_to_moves = {
+            'Double Shot': ('Crouching Medium Punch', 'Double Shot Punch 2')
+        }
+
+        def expand_combo(combo):
+            return tuple(chain.from_iterable(move_to_moves[move] if move in move_to_moves else (move,) for move in combo))
+
+        def tuple_starts_with_tuple(tuple, tuple2):
+            return len(tuple) >= len(tuple2) and all(tuple[index] == tuple2[index] for index in range(0, len(tuple2)))
+
+        def retrieve_combo_multipliers(combo):
+            return next((combo_multipliers_guile[combo2] for combo2 in combo_multipliers_guile.keys() if tuple_starts_with_tuple(combo, combo2)), None)
+
         def calculate_damage(combo):
+            combo = expand_combo(combo)
+            combo_multipliers = retrieve_combo_multipliers(combo)
+
             multiplier = 1
             damage = 0
             previous_move = None
             i = 1
             for move in combo:
-                if i >= 3 and previous_move in {'Parry Drive Rush', 'Cancel Drive Rush'} and not ('Parry Drive Rush' in combo[1:] or 'Cancel Drive Rush' in combo[1:]):
-                    multiplier = max(multiplier - 0.15, 0.1)
-                elif i >= 3 and is_normal_move(move) and multiplier > 0.1:
-                    multiplier = max(multiplier - 0.1, 0.1)
+                if combo_multipliers and len(combo_multipliers) >= i:
+                    multiplier = combo_multipliers[i - 1]
+                else:
+                    if i == 2 and previous_move == 'Drive Impact (Block)':
+                        multiplier = max(multiplier - 0.2, 0.1)
+                    elif i >= 3 and previous_move in {'Parry Drive Rush', 'Cancel Drive Rush'}:
+                        search_space = combo[1:-1]
+                        value = 0.17 if ('Parry Drive Rush' in search_space or 'Cancel Drive Rush' in search_space) else 0.15
+                        multiplier = max(multiplier - value, 0.1)
+                    elif i >= 3 and multiplier > 0.1:
+                        multiplier = max(multiplier - 0.1, 0.1)
 
                 move_multiplier = max(multiplier, 0.5) if is_super_art(move) else multiplier
                 damage += move_multiplier * retrieve_move(move)['damage']
@@ -133,7 +162,7 @@ for character in characters:
             combos = []
             combos_to_further_extend_after = []
 
-            starting_moves = [move for move in from_to.keys() if move != 'Sonic Break' and not move.startswith('(After drive rush) ')]
+            starting_moves = [move for move in from_to.keys() if move not in {'Cancel Drive Rush', 'Sonic Break'} and not move.startswith('(After drive rush) ')]
             for starting_move in starting_moves:
                 continuation_moves = from_to[starting_move]
                 for continuation_move in continuation_moves:
