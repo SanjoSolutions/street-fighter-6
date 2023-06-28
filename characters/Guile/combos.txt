@@ -8,3 +8,4 @@ Crouching Medium Kick (Punish Counter) > OD Somersault Kick (1880 damage, 0 supe
 Jumping Heavy Kick (Blocked) > Crouching Medium Kick (Counter) > Double Shot > Heavy Somersault Kick (2020 damage, 0 super art gauge, 0 drive gauge)
 Jumping Heavy Kick (Blocked) > Crouching Medium Kick (Hit) > Crouching Light Punch > Heavy Somersault Kick (the Crouching Light Punch cancelled) (1720 damage, 0 super art gauge, 0 drive gauge)
 Jumping Heavy Kick (Blocked) > Standing Medium Punch (Counter) > Double Shot > Heavy Somersault Kick (2320 damage, 0 super art gauge, 0 drive gauge, when the Standing Medium Punch is blocked, the advantage is 0)
+Reverse Spin Kick (Punish Counter) > Crouching Medium Kick > Heavy Somersault Kick (2820 damage, 0 super art gauge, 0 drive gauge)
