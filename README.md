@@ -26,11 +26,11 @@ The scripts have been written with [Python](https://www.python.org/).
 
 ### Guile
 
-[https://docs.google.com/spreadsheets/d/1_s_O958bg_4ZyOOxq_fX-KgQg44fp5B21ltQdZ4t2TQ/edit?usp=sharing]()
+[Google spreadsheet](https://docs.google.com/spreadsheets/d/1_s_O958bg_4ZyOOxq_fX-KgQg44fp5B21ltQdZ4t2TQ/edit?usp=sharing)
 
 ### Ryu
 
-[https://docs.google.com/spreadsheets/d/1DFSMj221zP8sIRzEX7HiMsM7dGdJweVsqILZt6hfyjs/edit?usp=sharing]()
+[Google spreadsheet](https://docs.google.com/spreadsheets/d/1DFSMj221zP8sIRzEX7HiMsM7dGdJweVsqILZt6hfyjs/edit?usp=sharing)
 
 The data for moves is currently missing.
 
