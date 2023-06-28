@@ -11,8 +11,8 @@ one can potentially sit back with the character and play very safe, because one 
 
 When ones character has less HP than the character of the other player, then
 it makes more sense to do actions which are only safe to some degree because
-on time over one loses the round with the current HPs, so trying something
-that potentially leads to an HP lead, seems to makes sense.
+on time over one loses the round with the current HPs. So trying something
+that potentially leads to an HP lead seems to makes sense.
 
 ## Characters
 
