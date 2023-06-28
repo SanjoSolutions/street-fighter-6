@@ -26,7 +26,9 @@ for character in characters:
 
             first_moves_on_punish_counter = [{**move, 'name': move['name'] + ' (Punish Counter)', 'advantage on hit': move['advantage on hit'] + 4 if move['advantage on hit'] else None} for move in first_regular_moves]
 
-            first_moves = first_regular_moves + first_moves_on_counter + first_moves_on_punish_counter
+            first_moves_after_drive_rush = [{**move, 'name': '(After drive rush) ' + move['name'], 'advantage on hit': move['advantage on hit'] + 4 if move['advantage on hit'] else None} for move in first_regular_moves]
+
+            first_moves = first_regular_moves + first_moves_on_counter + first_moves_on_punish_counter + first_moves_after_drive_rush
 
             connecting_moves = []
 

@@ -148,6 +148,8 @@ for character in characters:
             content = file.read()
             lines = content.split('\n')
             lines = lines[1:]
+            if lines[-1] == '':
+                lines = lines[:-1]
 
             entries = [line.split(',') for line in lines]
             entries = deduplicate(entries)
