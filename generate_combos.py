@@ -78,7 +78,8 @@ for character in characters:
 
         combo_multipliers_guile = {
             ('Jumping Heavy Kick', 'Crouching Medium Punch', 'Double Shot Punch 2'): (1, 1, 0.7),
-            ('Jumping Heavy Kick', 'Standing Medium Punch', 'Crouching Medium Punch', 'Double Shot Punch 2'): (1, 1, 0.8, 0.6)
+            ('Jumping Heavy Kick', 'Standing Medium Punch', 'Crouching Medium Punch', 'Double Shot Punch 2'): (1, 1, 0.8, 0.6),
+            ('Standing Heavy Punch', 'Cancel Drive Rush', '(After drive rush) Rolling Sobat', 'Standing Medium Punch'): (1, 1, 0.85, 0.68)
         }
 
         move_to_moves = {
@@ -120,7 +121,7 @@ for character in characters:
 
                 previous_move = move
                 i += 1
-            return damage
+            return int(damage)
 
 
         def is_normal_move(move):
@@ -195,7 +196,7 @@ for character in characters:
 
             content = '\n'.join(' > '.join(combo_with_metadata['combo']) + ' (~' + str(combo_with_metadata['damage']) + ' damage, ' + str(determine_super_art_gauge_usage(combo_with_metadata['combo'])) + ' super art gauge, ' + str(determine_drive_gauge_usage(combo_with_metadata['combo'])) + ' drive gauge)' for combo_with_metadata in combos_with_metadata)
 
-            with open(character_directory + '/combos.txt', mode='w',
+            with open(character_directory + '/combo_candidates.txt', mode='w',
                       encoding='utf-8') as output_file:
                 output_file.write(content)
 
@@ -203,6 +204,6 @@ for character in characters:
 
             content = '\n'.join(' > '.join(combo_with_metadata['combo']) + ' (~' + str(combo_with_metadata['damage']) + ' damage, ' + str(determine_super_art_gauge_usage(combo_with_metadata['combo'])) + ' super art gauge, ' + str(determine_drive_gauge_usage(combo_with_metadata['combo'])) + ' drive gauge)' for combo_with_metadata in selected_combos)
 
-            with open(character_directory + '/selected_combos.txt', mode='w',
+            with open(character_directory + '/selected_combo_candidates.txt', mode='w',
                       encoding='utf-8') as output_file:
                 output_file.write(content)
