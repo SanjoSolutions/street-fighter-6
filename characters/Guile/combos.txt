@@ -1,3 +1,7 @@
 Standing Heavy Punch > Cancel Drive Rush > (After drive rush) Rolling Sobat > Double Shot > Somersault Kick (2695 damage, 0 super art gauge, 3.0 drive gauge)
 Jumping Heavy Kick > Double Shot > Somersault Kick (2520 damage, 0 super art gauge, 0 drive gauge)
 Standing Medium Punch > Double Shot > Somersault Kick (2320 damage, 0 super art gauge, 0 drive gauge)
+Crouching Medium Kick (Counter) > Medium Somersault Kick (1480 damage, 0 super art gauge, 0 drive gauge)
+Crouching Medium Kick (Counter) > OD Somersault Kick (1880 damage, 0 super art gauge, 2 drive gauge)
+Crouching Medium Kick (Punish Counter) > Heavy Somersault Kick (1720 damage, 0 super art gauge, 0 drive gauge)
+Crouching Medium Kick (Punish Counter) > OD Somersault Kick (1880 damage, 0 super art gauge, 2 drive gauge)
