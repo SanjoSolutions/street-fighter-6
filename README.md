@@ -14,6 +14,12 @@ it makes more sense to do actions which are only safe to some degree because
 on time over one loses the round with the current HPs. So trying something
 that potentially leads to an HP lead seems to makes sense.
 
+### Advantage
+
+* Punish counters give 4 frames more advantage than a regular hit for normal moves.
+* Counters give 2 frames more advantage than a regular hit for normal moves.
+* Normal moves after drive rush give 4 frames more advantage than a regular hit.
+
 ## Characters
 
 This repository includes work for generating all combos that seem possible based on the model that the scripts use. Only some combos might work in the game because there are some factors like position, which have been covered only a little bit right now.
