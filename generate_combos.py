@@ -21,7 +21,7 @@ for character in characters:
 
             entries = [line.split(',') for line in lines]
             moves = dict(
-                (entry[0], {'drive gauge': float(entry[1] or 0), 'super art gauge': int(entry[2] or 0), 'is normal': entry[3] == 'TRUE', 'damage': int(entry[4])})
+                (entry[0], {'name': entry[0], 'drive gauge': float(entry[1] or 0), 'super art gauge': int(entry[2] or 0), 'is normal': entry[3] == 'TRUE', 'damage': int(entry[4]), 'advantage on hit': int(entry[5]) if entry[5] != '' else None, 'startup': int(entry[6]) if entry[6] != '' else None, 'advantage on block': int(entry[7]) if entry[7] != '' else None, 'is special move': entry[8] == 'TRUE'})
                 for entry in entries)
 
 
@@ -76,11 +76,9 @@ for character in characters:
                 return 0
 
 
-        combo_multipliers_guile = {
-            ('Jumping Heavy Kick', 'Crouching Medium Punch', 'Double Shot Punch 2'): (1, 1, 0.7),
-            ('Jumping Heavy Kick', 'Standing Medium Punch', 'Crouching Medium Punch', 'Double Shot Punch 2'): (1, 1, 0.8, 0.6),
-            ('Standing Heavy Punch', 'Cancel Drive Rush', '(After drive rush) Rolling Sobat', 'Standing Medium Punch'): (1, 1, 0.85, 0.68)
-        }
+        general_scaling = (1, 1, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1)
+        light_normal_starter_scaling = (1, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1)
+        cancellable_2mk_starter_scaling = (1, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1, 0.1)
 
         move_to_moves = {
             'Double Shot': ('Crouching Medium Punch', 'Double Shot Punch 2')
@@ -92,34 +90,77 @@ for character in characters:
         def tuple_starts_with_tuple(tuple, tuple2):
             return len(tuple) >= len(tuple2) and all(tuple[index] == tuple2[index] for index in range(0, len(tuple2)))
 
+        characters_whose_2mk_is_cancellable = set()  ## TODO: Complete
+
+        level1_super_arts = {'Sonic Hurricane', 'Heavy Sonic Hurricane'}  ## TODO: Complete
+        level2_super_arts = {'Solid Puncher'}  ## TODO: Complete
+        level3_super_arts = {'Crossfire Somersault'}  ## TODO: Complete
+
         def retrieve_combo_multipliers(combo):
-            return next((combo_multipliers_guile[combo2] for combo2 in combo_multipliers_guile.keys() if tuple_starts_with_tuple(combo, combo2)), None)
+            first_move = combo[0]
+            if first_move in {'Standing Light Punch', 'Crouching Light Punch', 'Standing Light Kick', 'Crouching Light Kick'}:
+                return light_normal_starter_scaling
+            elif character in characters_whose_2mk_is_cancellable or first_move in {'Drive Impact (Stun)', 'Drive Impact (Crumble)', 'Drive Impact (Wall Splat)'}:
+                return cancellable_2mk_starter_scaling
+            else:
+                return general_scaling
 
         def calculate_damage(combo):
+            ## See https://wiki.supercombo.gg/w/Street_Fighter_6/Game_Data#Damage_Scaling
+            ## TODO: Drive reversal
+
             combo = expand_combo(combo)
             combo_multipliers = retrieve_combo_multipliers(combo)
 
-            multiplier = 1
             damage = 0
+            multiplier = 1
+            extra_scaling = 0
+            extra_multiplier = 1
             previous_move = None
             i = 1
+            multiplier_index = 0
+            has_drive_rush_mid_combo_penalty_been_applied = False
+
             for move in combo:
-                if combo_multipliers and len(combo_multipliers) >= i:
-                    multiplier = combo_multipliers[i - 1]
+                if move == 'Perfect Parry':
+                    if i == 1:
+                        extra_multiplier *= 0.5
+                elif i == 1 and move == 'Drive Impact (Block)':  ## TODO: Drive Impact on hit
+                    extra_multiplier *= 0.8
+                elif i >= 2 and move in {'Parry Drive Rush', 'Cancel Drive Rush'} and not has_drive_rush_mid_combo_penalty_been_applied:
+                    extra_multiplier *= 0.85
+                    has_drive_rush_mid_combo_penalty_been_applied = True
                 else:
-                    if i == 2 and previous_move == 'Drive Impact (Block)':
-                        multiplier = max(multiplier - 0.2, 0.1)
-                    elif i >= 3 and previous_move in {'Parry Drive Rush', 'Cancel Drive Rush'}:
-                        search_space = combo[1:-1]
-                        value = 0.17 if ('Parry Drive Rush' in search_space or 'Cancel Drive Rush' in search_space) else 0.15
-                        multiplier = max(multiplier - value, 0.1)
-                    elif i >= 3 and multiplier > 0.1:
-                        multiplier = max(multiplier - 0.1, 0.1)
+                    multiplier = combo_multipliers[min(multiplier_index, len(combo_multipliers) - 1)]
+                    extra_scaling = 0
+                    if is_super_art(move):
+                        if move in level3_super_arts:
+                            minimum_multiplier = 0.5
+                        elif move in level2_super_arts:
+                            minimum_multiplier = 0.4
+                        elif move in level1_super_arts:
+                            minimum_multiplier = 0.3
+                        else:
+                            raise Exception('Super art "' + move + '" seems absent in the sets level1_super_arts, level2_super_arts and level3_super_arts.')
+                        if i >= 2 and retrieve_move(previous_move)['is special move']:
+                            extra_scaling += -0.1
+                    else:
+                        minimum_multiplier = multiplier
 
-                move_multiplier = max(multiplier, 0.5) if is_super_art(move) else multiplier
-                damage += move_multiplier * retrieve_move(move)['damage']
+                    if character == 'Guile' and move == 'Double Shot Punch 2':
+                        extra_scaling += -0.1
 
-                previous_move = move
+                    move_multiplier = max(multiplier - extra_scaling, minimum_multiplier) * extra_multiplier
+                    damage += move_multiplier * retrieve_move(move)['damage']
+
+                    previous_move = move
+                    multiplier_index += 1
+
+                    if character == 'Guile:':
+                        if move == 'Double Shot Punch 2':
+                            multiplier_index += 1
+                        elif i == 1 and move == 'Crouching Medium Kick':
+                            extra_scaling += -0.1
                 i += 1
             return int(damage)
 
