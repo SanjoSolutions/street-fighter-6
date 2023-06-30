@@ -1,2 +1,4 @@
 Drive Impact (Punish Counter) > Assisted Combo 3 (4160 damage, 3 super art gauge, 3 drive gauge)
 Drive Impact (Punish Counter) > Assisted Combo 2 (3100 damage, 1 super art gauge, 3 drive gauge)
+Drive Impact (Punish Counter) > Move a little bit to the other character > Assisted Combo 1 (2210 damage, 0 super art gauge, 1 drive gauge)
+Drive Impact (Punish Counter) > Assisted Combo 3 (Move 1, 2 and 3) (2460 damage, 0 super art gauge, 3 drive gauge)
